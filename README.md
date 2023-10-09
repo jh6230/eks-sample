@@ -11,6 +11,11 @@ Delete
 eksctl delete cluster --name sample-cluster --region ap-northeast-1
 ```
 
+Update kubeconfig
+```
+aws eks update-kubeconfig --region ap-northeast-1 --name sample-cluster
+```
+
 ## kubectl
 ```
 $ kubectl get nodes
@@ -19,6 +24,13 @@ $ kubectl get pods
 ```
 
 ## Load Balancer Controller
+
+OIDC Install
+```
+$ export cluster_name=sample-cluster
+$ eksctl utils associate-iam-oidc-provider --cluster $cluster_name --approve
+
+```
 
 IAMポリシー ダウンロード
 ```
@@ -49,8 +61,16 @@ $ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --set clusterName=sample-cluster \
   --set serviceAccount.create=false \
   --set region=ap-northeast-1 \
-  --set vpcId=vpc-05e5fc8ac94806095 \
+  --set vpcId=vpc-0a28777638bbe515b \
   --set serviceAccount.name=aws-load-balancer-controller
+```
+
+```
+eksctl create fargateprofile \
+    --cluster sample-cluster \
+    --region ap-northeast-1 \
+    --name alb-sample-app \
+    --namespace game-2048
 ```
 
 ## 参考資料
